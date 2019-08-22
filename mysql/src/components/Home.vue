@@ -126,15 +126,13 @@ export default {
             this.datos.push(this.port);
             this.datos.push(this.password)
             this.datos.push(this.base)
-            console.log(this.datos)
             socket.emit('conexion', this.datos);
             //this.datos= []
             for (let index = 0; index < 5; index++) {
                 this.datos.pop()
             }   
-            let dato;
             socket.on('server', (data) => {
-                if(data == "conexion chida"){
+                if(data == "conexion correcta"){
                 this.$router.push({ name: 'nuevo' })
             }
             });

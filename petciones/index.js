@@ -11,7 +11,6 @@ io.on('connection', function (socket) {
   var connection;
   var respu;
   socket.on('conexion',  (data)=> {
-    console.log(data)
     this.connection = mysql.createConnection({
       host: data[1],
       user: data[0],
@@ -21,18 +20,17 @@ io.on('connection', function (socket) {
     });
     this.connection.connect(function(error){
       if(error){
-        socket.emit('server', 'Ha la cagaste')
+        socket.emit('server', 'error')
       }else{
-         //console.log('Conexion correcta.');
-         socket.emit('server', 'conexion chida')
+         console.log('Conexion correcta.');
+         socket.emit('server', 'conexion correcta')
       }
     });
   });
   socket.on('ejec',(data) =>{
-    console.log(data)
     var query = this.connection.query(data[1], (error, result) =>{
       if(error){
-         console.log('error')
+        socket.emit('server','error')
       }else{
          this.respu = result;
          socket.emit('server',result)
@@ -43,16 +41,17 @@ io.on('connection', function (socket) {
     case 'insert':
       var query2 = this.connection.query('select * from '+data[2], (error, result)=>{
         if(error){
-           console.log('error')
+           //console.log('error')
         }else{
            socket.emit('server',result)
         }
       });
       break;
     case 'delete':
+      var valida;
       var query2 = this.connection.query('select * from '+data[2], (error, result)=>{
         if(error){
-          console.log('error')
+          //console.log('error')
         }else{
           socket.emit('server',result)
         }
@@ -61,13 +60,17 @@ io.on('connection', function (socket) {
     case 'update':
       var query2 = this.connection.query('select * from '+data[2], (error, result)=>{
         if(error){
-          console.log('error')
+          //console.log('error')
         }else{
           socket.emit('server',result)
         }
       });
       break;
    }
+  })
+  socket.on('logout',()=>{
+    this.connection.end();
+    console.log('desconectado')
   })
 });
 
